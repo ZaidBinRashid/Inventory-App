@@ -1,0 +1,24 @@
+{
+  "name": "inventory-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start" : "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZaidBinRashid/Inventory-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/ZaidBinRashid/Inventory-App/issues"
+  },
+  "homepage": "https://github.com/ZaidBinRashid/Inventory-App#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
