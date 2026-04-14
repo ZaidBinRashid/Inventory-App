@@ -6,7 +6,9 @@ const port  = 4001;
 
 // Global Middleware.
 app.use(express.json())
-app.use('/', userRoutes);
+app.use(cors())
+
+app.use('/api/user', userRoutes);
 
 
 
