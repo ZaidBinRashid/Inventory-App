@@ -1,5 +1,5 @@
 import express from "express"
-import userRoutes from './routes/userRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 import 'dotenv/config'
 import cors from 'cors'
 
@@ -10,7 +10,7 @@ const port  = process.env.PORT;
 app.use(express.json()) 
 app.use(cors())
 
-app.use('/api/user', userRoutes);
+app.use('/api/product', productRoutes);
 
 
 
