@@ -1,99 +1,100 @@
 import pool from "../config/pool.js";
 
-// Controller to add a new product
+// Add Product
 export const addProduct = async (req, res) => {
-  // Get a client (connection) from the pool
-  const client = await pool.connect();
-
+  const { title, price, quantity } = req.body;
   try {
-    // Extract data from request body
-    const { title, price, quantity } = req.body;
 
-    // Validate input (check if any field is missing)
+    // Validate input
     if (!title || !price || !quantity) {
-      return res.status(400).json("All fields are required!");
+      return res.status(400).json({ message: "All fields are required!" });
     }
 
-    // Start a transaction
-    await client.query("BEGIN");
-
-    // Insert product into database
-    const Product = await client.query(
+    const result = await pool.query(
       `INSERT INTO products (title, price, quantity) 
        VALUES ($1, $2, $3) 
        RETURNING *`,
-      [title, price, quantity], // values for placeholders
+      [title, price, quantity]
     );
 
-    // If everything is successful, save changes
-    await client.query("COMMIT");
-
-    // Send success response
     res.status(201).json({
       message: "Product added successfully",
-      product: Product.rows,
+      product: result.rows[0],
     });
+
   } catch (err) {
-    // If any error occurs, undo all changes
-    await client.query("ROLLBACK");
-
-    // Log error for debugging
     console.error("Add Product Error:", err);
-
-    // Send error response
     res.status(500).json({ error: "Server error" });
-  } finally {
-    // Release client back to pool (VERY IMPORTANT)
-    client.release();
   }
 };
 
-// Controller to get products
+
+// Get All Products
 export const getProducts = async (req, res) => {
   try {
-    const Products = await pool.query(
-      `SELECT id, title, price, quantity, in_stock FROM products`,
+    const result = await pool.query(
+      `SELECT id, title, price, quantity, in_stock FROM products`
     );
 
-    // Send success response
     res.status(200).json({
-      message: "Product fetched successfully",
-      Product: Products.rows,
+      message: "Products fetched successfully",
+      products: result.rows,
     });
-  } catch (err) {
-    // Log error for debugging
-    console.error("Fetching Products Error:", err);
 
-    // Send error response
+  } catch (err) {
+    console.error("Fetching Products Error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-// Controller to delete product
+
+// Delete Product
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Validate id
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ message: "Invalid product id" });
+    }
 
-    if(id >= 1){
-
-    const deleteProduct = await pool.query(
+    const result = await pool.query(
       `DELETE FROM products WHERE id = $1`,
       [id]
     );
 
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-
-    // Send success response
     res.status(200).json({
       message: "Product deleted successfully",
-      deleteProduct
-    });}
-  } catch (err) {
-    // Log error for debugging
-    console.error("Deleting Product Error:", err);
+    });
 
-    // Send error response
+  } catch (err) {
+    console.error("Deleting Product Error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };
+
+
+// Update Product
+export const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { title, price, quantity, in_stock } = req.body;
+  
+  try {
+     // Validate id
+    if (!id || isNaN(id)) {
+      return res.status(400).json({ message: "Invalid product id" });
+    }
+    // Validate input
+    if (!title || !price || !quantity || !in_stock) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
+
+  } catch (err) {
+    console.error("Updating Product Error:", err);
+    res.status(500).json({error: "Server error"});
+  }
+}
