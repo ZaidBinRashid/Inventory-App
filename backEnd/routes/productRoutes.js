@@ -3,7 +3,6 @@ import { addProduct, getProducts, deleteProduct, updateProduct } from '../contro
 
 const router = express.Router()
 
-
 router.post('/addProduct', addProduct)
 router.get('/getProducts', getProducts)
 router.delete('/deleteProduct/:id', deleteProduct)

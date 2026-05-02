@@ -3,14 +3,25 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../.env" });
 
 const SQL = `
-    CREATE TABLE IF NOT EXISTS products  (
+    CREATE TABLE IF NOT EXISTS products (
       id SERIAL PRIMARY KEY,
       title VARCHAR(200) NOT NULL,
       price NUMERIC(10, 2) NOT NULL,
-      quantity NUMERIC(10, 2) NOT NULL,
+      quantity  INTEGER NOT NULL,
       in_stock BOOLEAN DEFAULT TRUE,
       created_at TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
-);
+    );
+
+
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      userName VARCHAR(50) NOT NULL,
+      storeName VARCHAR(50) NOT NULL,
+      email VARCHAR(50) NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT  CURRENT_TIMESTAMP
+    );
+
 `
 
 async function main() {
